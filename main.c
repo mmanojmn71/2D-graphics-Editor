@@ -1,5 +1,9 @@
 #include<stdio.h>
 char canvas[30][60];
+int shapeType[100];
+int sRow[100],sCol[100];
+int sW[100],sH[100];
+int shapeCount=0;
 void initializeCanvas();
 void clearCanvas();
 void displayCanvas();
@@ -65,6 +69,86 @@ void drawCircle(int centerX,int centerY,int radius){
         }
     }
 }
+void redrawAll(){
+    clearCanvas();
+    for(int i=0;i<shapeCount;i++){
+        if(shapeType[i]==1)
+        drawLine(sRow[i],sCol[i],sW[i]);
+        else if(shapeType[i]==2)
+        drawRectangle(sRow[i],sCol[i],sW[i],sH[i]);
+        else if(shapeType[i]==3)
+        drawCircle(sRow[i],sCol[i],sW[i]);
+        else if(shapeType[i]==4)
+        drawTriangle(sRow[i],sCol[i],sW[i]);
+
+    }
+}
+void addShape(){
+    printf("\n--- ADD SHAPE ___\n");
+    printf("enter type(1-Line 2-Rectangle 3-Circle 4-Triangle):");
+    scanf("%d",&shapeType[shapeCount]);
+    printf("enter row col:");
+    scanf("%d%d",&sRow[shapeCount],&sCol[shapeCount]);
+    printf("enter width:");
+    scanf("%d",&sW[shapeCount]);
+    printf("enter height (0 if not needed):");
+    scanf("%d",&sH[shapeCount]);
+    shapeCount++;
+    redrawAll();
+    printf("shape Added\n");
+}
+void deleteShape(){
+    if(shapeCount==0){
+        printf("no shape available to delete.\n");
+        return;
+
+    }
+    int index;
+    printf("\n---DELETE SHAPE ___\n");
+    printf("Enter index:");
+    scanf("%d",&index);
+    if(index<0 || index>=shapeCount){
+        printf("invalid index");
+        return;
+    }
+    for(int i=index;i<shapeCount-1;i++){
+        shapeType[i]=shapeType[i+1];
+        sRow[i]=sRow[i+1];
+        sCol[i]=sCol[i+1];
+        sW[i]=sW[i+1];
+        sH[i]=sH[i+1];
+    }
+    shapeCount--;
+    redrawAll();
+    printf("shape deleted\n");
+
+}
+void modifyShape(){
+    if(shapeCount==0){
+        printf("no shapes available to modified\n");
+        return;
+    }
+    int index;
+    printf("\n---MODIFY SHAPE ---\n");
+    printf("enter index");
+    scanf("%d",&index);
+    if(index<0 || index>=shapeCount){
+        printf("invalid index\n");
+        return;
+
+    }
+    printf("enter new type:");
+    scanf("%d",&shapeType[index]);
+    printf("enter new row col:");
+    scanf("%d%d",&sRow[index],&sCol[index]);
+    printf("new width");
+    scanf("%d",sW[index]);
+    printf("enter new height");
+    scanf("%d",&sH[index]);
+    redrawAll();
+    printf("shape Modified\n");
+
+}
 int main()
 
 {
@@ -72,47 +156,40 @@ int main()
    initializeCanvas();
    do{
     printf("\n===== 2D Graphics Editor =====\n");
-    printf("1 Draw Line\n");
-    printf("2 Draw Rectangle\n");
-    printf("3 Draw Triangle\n");
-    printf("4 Draw Circle\n");
-    printf("5 Display Canvas\n");
-    printf("6 Clear Canvas\n");
-    printf("7 exit\n");
+    printf("1 Add Shape\n");
+    printf("2 Display Canvas\n");
+    printf("3 Delete Shape\n");
+    printf("4 Modify Shape\n");
+    printf("5 Clear Canvas\n");
+    printf("6 exit\n");
     printf("Enter Choice\n");
     scanf("%d",&choice);
     switch(choice){
         case 1:
-        drawLine(2,5,10);
-        printf("Line Drawn\n");
+        addShape();
         break;
         case 2:
-        drawRectangle(8,10,12,5);
-        printf("Rectangle Drawn\n");
-        break;
-        case 3:
-        drawTriangle(15,5,8);
-        printf("Triangle Drawn\n");
-        break;
-        case 4:
-        drawCircle(15,45,4);
-        printf("Circle Drawn\n");
-        break;
-        case 5:
         displayCanvas();
         break;
-        case 6:
-        clearCanvas();
-        printf("Canvas Cleared\n");
+        case 3:
+        deleteShape();
         break;
-        case 7:
-        printf("Exiting Program...\n");
+        case 4:
+        modifyShape();
+        break;
+        case 5:
+        clearCanvas();
+        shapeCount=0;
+        printf("Canvas cleared\n");
+        break;
+        case 6:
+        printf("exiting program\n");
         break;
         default:
         printf("invalid choice\n");
     }
 
    }
-   while(choice!=7);
+   while(choice!=6);
    return 0;
 }
