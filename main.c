@@ -11,6 +11,13 @@ void drawLine(int row,int col,int length);
 void drawRectangle(int row,int col,int width,int height);
 void drawTriangle(int row,int col,int size);
 void drawCircle(int centerX,int centerY,int radius);
+void redrawAll();
+void addShape();
+void deleteShape();
+void modifyShape();
+void listShape();
+void saveDrawing();
+void loadDrawing();
 void initializeCanvas(){
     for(int i=0;i<30;i++){
         for(int j=0;j<60;j++){
@@ -83,6 +90,17 @@ void redrawAll(){
 
     }
 }
+void listShape(){
+    if(shapeCount==0){
+        printf("\n no shapes available\n");
+        return;
+    }
+    printf("\n stored shape\n");
+    for(int i=0;i<shapeCount;i++){
+        printf("index %d -Type=%d Row=%d col=%d width=%d Height=%d\n",i,shapeType[i],sRow[i],sCol[i],sW[i],sH[i]);
+    }
+
+}
 void addShape(){
     printf("\n--- ADD SHAPE ___\n");
     printf("enter type(1-Line 2-Rectangle 3-Circle 4-Triangle):");
@@ -98,14 +116,14 @@ void addShape(){
     printf("shape Added\n");
 }
 void deleteShape(){
+    int index;
     if(shapeCount==0){
         printf("no shape available to delete.\n");
         return;
 
     }
-    int index;
-    printf("\n---DELETE SHAPE ___\n");
-    printf("Enter index:");
+    listShape();
+    printf("Enter Shape index to delete:");
     scanf("%d",&index);
     if(index<0 || index>=shapeCount){
         printf("invalid index");
@@ -124,13 +142,13 @@ void deleteShape(){
 
 }
 void modifyShape(){
+    int index;
     if(shapeCount==0){
         printf("no shapes available to modified\n");
         return;
     }
-    int index;
-    printf("\n---MODIFY SHAPE ---\n");
-    printf("enter index");
+    listShape();
+    printf("enter Shape index to modified");
     scanf("%d",&index);
     if(index<0 || index>=shapeCount){
         printf("invalid index\n");
@@ -142,11 +160,43 @@ void modifyShape(){
     printf("enter new row col:");
     scanf("%d%d",&sRow[index],&sCol[index]);
     printf("new width");
-    scanf("%d",sW[index]);
+    scanf("%d",&sW[index]);
     printf("enter new height");
     scanf("%d",&sH[index]);
     redrawAll();
     printf("shape Modified\n");
+
+}
+void saveDrawing(){
+    FILE*fp=fopen("drawing.txt","w");
+    if(fp==NULL){
+        printf("error opening file\n");
+        return;
+    }
+    for(int i=0;i<30;i++){
+        for(int j=0;j<60;j++){
+            fputc(canvas[i][j],fp);
+        }
+        fputc('\n',fp);
+    }
+    fclose(fp);
+    printf("drawing saved to drawing.txt\n");
+}
+void loadDrawing(){
+    FILE*fp=fopen("drawing.txt","r");
+    if(fp==NULL){
+        printf("drawing.txt not found\n");
+        return;
+    }
+    for(int i=0;i<30;i++){
+        for(int j=0;j<60;j++){
+            canvas[i][j]=fgetc(fp);
+        }
+        fgetc(fp);
+    }
+    fclose(fp);
+    printf("drawing loaded from drawing.txt\n");
+
 
 }
 int main()
@@ -161,7 +211,10 @@ int main()
     printf("3 Delete Shape\n");
     printf("4 Modify Shape\n");
     printf("5 Clear Canvas\n");
-    printf("6 exit\n");
+    printf("6 List shape\n");
+    printf("7 exit\n");
+    printf("8 save Drawing\n");
+    printf("9 Load Drawing\n");
     printf("Enter Choice\n");
     scanf("%d",&choice);
     switch(choice){
@@ -183,13 +236,22 @@ int main()
         printf("Canvas cleared\n");
         break;
         case 6:
+        listShape();
+        break;
+        case 7:
         printf("exiting program\n");
+        break;
+        case 8:
+        saveDrawing();
+        break;
+        case 9:
+        loadDrawing();
         break;
         default:
         printf("invalid choice\n");
     }
 
    }
-   while(choice!=6);
+   while(choice!=7);
    return 0;
 }
