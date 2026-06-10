@@ -1,0 +1,15 @@
+Day 1 – Project Setup
+
+Set up the 2D Graphics Editor project in C. Designed the overall architecture, created source files, and planned the canvas-based drawing system.
+Day 2 – Canvas and Display Function
+
+Implemented a 30×60 drawing canvas using a 2D character array. Added functions to initialize, clear, and display the canvas.
+Day 3 – Line and Rectangle Drawing
+
+Developed line and rectangle drawing functions. Enabled users to draw shapes by specifying position and dimensions.
+Day 4 – Triangle and Circle Drawing
+
+Implemented triangle and circle drawing algorithms. Added support for drawing complex geometric shapes on the canvas.
+Day 5 – Menu System and Shape Management
+
+Created a menu-driven interface and implemented shape management features such as add, modify, delete, clear, save, and load drawing operations. Completed testing and finalized the project.
